@@ -1,0 +1,31 @@
+{% extends 'pages/home.html' %}
+{% load crispy_forms_tags %}
+{% load static %}
+
+{% block title %}No Vote Yet{% endblock title %}
+
+{% block content %}
+
+
+<div class="container viewing-tray "  >
+    <div class="row">
+      <div class="col-2-md"></div>
+      <div class="col-8-md px-4" style="width: 100%;">
+
+        
+        <h1 style="text-align: center;">You have not voted yet!</h1>
+
+        <br><br><br>
+            <h3 style="text-align: center;">According to your records, you have not voted yet, thus you cannot update a vote! </h3>
+            <p style="text-align: center;">Please create a vote <a href="{% url 'create'%}">here</a> and feel free to update it whenever you change your mind.</p>
+
+        </div>
+
+
+      </div>
+      <div class="col-2-md"></div>
+    </div>  
+</div>
+
+
+{% endblock content %}

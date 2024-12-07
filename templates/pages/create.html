@@ -1,0 +1,25 @@
+{% extends 'pages/home.html' %}
+{% load crispy_forms_tags %}
+{% load static %}
+
+{% block title %}Home page{% endblock title %}
+
+{% block content %}
+
+<div class="container viewing-tray">
+
+    <h1 style="text-align: center;" class='pt-3'>What is your favorite season?</h1>
+
+    {% if user.is_authenticated %}
+
+        <form action='.' method='POST'>
+            {% csrf_token %}
+            {% crispy form %}
+        </form>
+
+    {% endif %}
+
+</div>
+
+
+{% endblock content %}

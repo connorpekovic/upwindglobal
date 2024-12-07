@@ -1,0 +1,29 @@
+h1 {
+    color: red;
+}
+.reddd {
+    color: red;
+}
+
+.coverphoto {
+    height: 300px;
+    width: auto;
+}
+
+/* Used to center dav links */
+.containerNav1 {
+    display: flex;
+    align-items: center;
+  }
+
+.anchor {
+  margin-right: 10px;
+}
+
+.viewing-tray {
+  background-color: #E9ECEF;  
+  border-radius: 5px;
+  margin-top: 3em;
+  padding-bottom: 2em;
+  padding-top: 1em;
+}

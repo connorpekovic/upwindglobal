@@ -1,0 +1,562 @@
+{% extends '_base.html' %}
+{% load static %}
+
+{% block title %}Home page Data{% endblock title %}
+
+{% block content %}
+
+
+    <div class="container">
+
+        
+        <!-- Location location Input form. -->
+        <div class="container"> 
+            <div class="row">
+                <div class="col-md-4"></div>
+                <div class="col-md-4" style="text-align: center;">
+                    <label for="weatherLocationInputID">
+                        <h3 class="mb-1 pt-2 font-color-1"> Generate Weather Forcast </h3>
+                    </label>
+                    <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="basic-addon3">Location</span>
+                    </div>
+                    <!-- <input type="text" class="form-control" id="weatherLocationInputID" aria-describedby="basic-addon3"> -->
+                    <input type="text" class="form-control" id="search_input" placeholder="Type city name..." />
+
+                    <!-- The Javascript for this function is defined inline below. -->
+                    <button type="button" class="btn btn-primary" onclick="getLocalWeather()">Search</button>
+                    </div>
+                </div>
+                <div class="col-md-4"></div>
+            </div>
+        </div>  
+
+        <!-- Weather location output form.  -->
+        <div id="weatherCardID" style="display: none;">
+            <div class="row pb-3">
+                <div class="col-md-3"></div>
+                <!-- Summary Card-->
+                <div class="col-md-2">
+                    <div class="card">
+                        <div class="card-header" id="LocationID"  style="text-align: center;">
+                            <!-- Location -->
+                        </div>
+                        <div class="card-body">
+                            
+                            <!-- <h5 class="card-title">Special title treatment</h5> 
+                            <p class="card-text">With supporting text below as a natural lead-in to additional content.</p> -->
+                            
+                            <!-- Tempature -->
+                            <h2 style="text-align: center;" id="tempature"></h2>
+
+                            <!-- picture-->
+                            <div style="text-align: center">
+                            <img id ='weatherIcon'> 
+                            </div>
+                            
+                            <!-- Description -->
+                            <p class="card-text" style="text-align: center;" id="weatherDescriptionID"></p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Windy Weather Map -->
+                <div class="col-md-5" >
+                    <div id="map"></div>
+                </div>
+                <div class="col-md-2"></div>
+            </div>
+        </div>
+
+        <hr>
+
+        <!--  Vote on a season, Rest display. Early code.-->
+        <div class="row" style="background-color: #E9ECEF;  border-radius: 5px;">
+            <!-- Call to action Jumbotron -->
+            <div class="col-md-4">
+                <div class="jumbotron">
+                    <h1 class="display-5">What is your favorite season?</h1>
+                    <p class="lead">Tell us what is your favorite season.</p>
+                    <hr class="my-4">
+                    <p>Vote on your favorite season.</p>
+                    <p class="lead">
+                        <a class="btn btn-primary btn-lg" href="{% url 'create' %}" role="button">Vote Here</a>
+                    </p>
+                </div>
+            </div>
+            <!-- Pie chart -->
+            <div class="col-md-4">
+                <div style="padding-right: 2rem; padding-left: 2rem; background-color: #E9ECEF;  border-radius: 5px;">
+                    {% include 'pages/info/detail.html' %}
+                </div>
+            </div>
+            
+            <div class="col-md-4">
+                    <div style="padding-right: 2rem; padding-left: 2rem; position: relative; background-color: #E9ECEF;  border-radius: 5px;">
+                        {% include 'pages/info/detailrest.html' %}
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+
+    <!-- Javascript Coding Section -->
+    <script>
+
+    var searchInput = 'search_input';
+
+    // The autocomplete works as long as nothing was in the input feild before a webpage reload.
+    // If there's text in the input "place_changed", gMaps will freeze on reload.
+     
+    $(document).ready(function () {
+     var autocomplete;
+     autocomplete = new google.maps.places.Autocomplete((document.getElementById(searchInput)), {
+      types: ['geocode'],
+      /*componentRestrictions: {
+       country: "USA"
+      }*/
+     });
+      
+     google.maps.event.addListener(autocomplete, 'place_changed', function () {
+      var near_place = autocomplete.getPlace();
+     });
+    });
+
+        /* This function is called my the onload attribtue of the body html element.*/
+        function onLoadFunct() {
+            console.log("Page load");
+            // document.getElementById("search_input").value = ""
+            // document.getElementById("weatherLocationInputID").value += "Ann Arbor";
+            // getLocalWeather();
+
+
+            // const work = async () => {
+            // await sleep(1000)
+            //     document.getElementById("leaflet-radar-toggle").checked = true;
+            // }
+            // work()
+            // document.getElementById('leaflet-radar-toggle').click();
+        }
+
+        /* Global variable declaration section */
+        let workLocation = ''
+        let lat = 0
+        let lon = 0
+
+        /* OpenWeatherAPI Used to populate Local Wether Card. */
+        /*
+        Function name: getLocalWeather
+        Purpose: Build the string for the URL call to the openweatherapi for weather data, then passed
+                 the string to the getTempature function.
+        Input: User input of a city name where we want weather data from.
+        Output: Passed the URL for the REST Api call to getTeampture() defined direclty below. 
+        */
+        
+        async function getLocalWeather() {
+            
+            var input = document.getElementById("search_input").value;
+            
+            /* Format the input */
+            workLocation = input
+            input = input.toLowerCase();
+            
+
+            /* Build the URL Query */
+            let hostnamePath = 'https://api.openweathermap.org/data/2.5/weather?q='
+            let appid = '&appid=a8efcfe69258b521961181dac55090ca'
+
+            let getLocalWeatherCall = hostnamePath.concat(input, appid);
+
+            /* The HTML Value element assignments will happen in the getTempature function */ 
+            /* because I am having a hard time */
+            getTempature(getLocalWeatherCall);
+            
+        }
+
+        /*
+        Function name: getTempature
+        Purpose: Call REST API, parse JSON Data, pupulate HTML with the output, and refresh screen size.
+        Input: RestAPI URL
+        Output: Populating HTML with values and resizing the screen at the end for Leaflets.js.
+        */
+        async function getTempature(getLocalWeatherCall) {
+
+            /* Gracefully close the current map instance */
+            // map.off();
+            // map.remove();
+            // map.invalidateSize();
+    
+            // execute function, Storing response
+            const response = await fetch(getLocalWeatherCall);
+            console.log('Fetch initatiated')
+
+            // Storing data in form of JSON
+            var data = await response.json();
+        
+            /*
+            In the response, we want to get a few key peices of data.
+            Numbers 2 and 3 will help determine what graphic we show.
+
+                1. The tempature
+                1A. Get longitude and lattitude.
+                2. Weather Main indicator
+                3. Weather Description
+                4. Icon indicator
+                5. Populate HTML Elements
+                6. Resize screen so Leaflet.js knows what size the screen will be.
+            */
+            if (response) {
+
+                // 1 The tempature
+                let K, F = 0
+                K = data.main.temp
+                F = ((K-273.15)*1.8)+32
+                F = Math.round(F)
+                console.log('InlineJS: Tempature is ', F)
+
+                // 1A. Get longitude and lattitude.
+                
+                lat = data.coord.lat
+                lon = data.coord.lon
+
+
+                // 2. Weather Main 
+                let weatherMain= data.weather[0].main
+                console.log('Main weather array: ', weatherMain)
+
+                // 3. Weather Description
+                let weatherDescription = data.weather[0].description
+                console.log('Description of weather data: ', weatherDescription)
+
+                // 4. Icon indicator
+                let weatherIcon = data.weather[0].icon
+                console.log('Weather icon is: ', weatherIcon)
+                let hostAndBasePath = 'https://openweathermap.org/img/wn/';
+                let RestofString = '@2x.png'
+                let getIconCall = hostAndBasePath.concat(weatherIcon, RestofString)
+                console.log(getIconCall)
+
+                // 5. Populate HTML Elements
+                document.getElementById("weatherCardID").style.display = "block";
+                document.getElementById("tempature").innerHTML = F + "°F";
+                document.getElementById("LocationID").innerHTML = workLocation;
+                document.getElementById("weatherDescriptionID").innerHTML = weatherDescription;
+                document.getElementById("weatherIcon").src = getIconCall; 
+                document.getElementById("weatherIcon").src = getIconCall; 
+
+                callMap()
+
+                return F  
+            }
+        }
+
+
+
+
+
+        
+        /*  leaflet.js */
+        async function callMap() {
+            // var map = L.map('map').setView([lat, lon], 10);
+
+            // L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            //     maxZoom: 19,
+            //     attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+            // }).addTo(map);
+
+            // /* 6. Resize screen so Leaflet.js knows what size the screen will be. */
+            // setTimeout(function () {
+            // window.dispatchEvent(new Event('resize'));
+            // }, 10);
+            // console.log('Resize called')
+
+
+            
+
+            /*Radar*/
+
+            /*  If the map exist, nullify it because the next instruction initalizes a map
+                and we can only have 1 map active per web scession. 
+
+            Source: https://github.com/Leaflet/Leaflet/issues/3962#issuecomment-384510881
+            */
+            var container = L.DomUtil.get('map');
+            if(container != null){
+            container._leaflet_id = null;
+            }
+
+            // Initalize the map to the lattitude and longitude recieved from the OpenWeatherApi
+            map = L.map("map").setView([lat, lon], 7);
+
+            // Build html values for attribution section on the bottom corner of the map.
+            var osmAttribution =
+                    'Map data &copy; <a href="https://openstreetmap.org">OpenStreetMap</a> contributors';
+            var leafletRadarAttribution =
+                    '<a href="https://github.com/rwev/leaflet-radar">Radar</a>';
+
+            // Add a layer to the map.
+            L.tileLayer(
+                    "https://tile-{s}.openstreetmap.fr/hot/{z}/{x}/{y}.png",
+                    {
+                            attribution: [
+                                    osmAttribution,
+                                    leafletRadarAttribution
+                            ].join(" | ")
+                    }
+            ).addTo(map);
+
+            L.marker([lat, lon]).addTo(map)
+            .bindPopup(workLocation)
+            .openPopup();   
+
+            L.control.radar({}).addTo(map);
+
+            /* 6. Resize screen so Leaflet.js knows what size the screen will be. */
+            setTimeout(function () {
+            window.dispatchEvent(new Event('resize'));
+            }, 10);
+            console.log('Resize called')
+
+
+
+        }
+
+
+
+
+
+
+        /* Leaflet radar */
+        L.Control.Radar = L.Control.extend({
+
+        NEXRAD_URL: `https://mesonet.agron.iastate.edu/cgi-bin/wms/nexrad/n0q.cgi`,
+        NEXRAD_LAYER: `nexrad-n0q-900913`,
+
+        isPaused: false,
+        timeLayerIndex: 0,
+        timeLayers: [],
+
+        options: {
+            position: `topright`,
+            opacity: 0.575,
+            zIndex: 200,
+            transitionMs: 750,
+            playHTML: `&#9658;`,
+            pauseHTML: `&#9616;`,
+        },
+
+        onRemove: function () {
+            L.DomUtil.remove(this.container);
+        },
+
+        onAdd: function (map) {
+            this.map = map;
+
+            // setup control container
+            this.container = L.DomUtil.create(`div`, "leaflet-radar");
+
+            L.DomEvent.disableClickPropagation(this.container);
+            L.DomEvent.on(this.container, `control_container`, function (e) {
+                L.DomEvent.stopPropagation(e);
+            });
+            L.DomEvent.disableScrollPropagation(this.container);
+
+            // add control elements within container
+            checkbox_div = L.DomUtil.create(
+                `div`,
+                `leaflet-radar-toggle`,
+                this.container
+            );
+
+            this.checkbox = document.createElement(`input`);
+            this.checkbox.id = `leaflet-radar-toggle`;
+            this.checkbox.type = `checkbox`;
+            this.checkbox.checked = false;
+            this.checkbox.onclick = () => this.toggle();
+
+            checkbox_div.appendChild(this.checkbox);
+
+            let checkbox_label = document.createElement(`span`);
+            checkbox_label.innerText = `Radar`;
+
+            checkbox_div.appendChild(checkbox_label);
+
+            let slider_div = L.DomUtil.create(
+                `div`,
+                `leaflet-radar-slider`,
+                this.container
+            );
+
+            this.slider = document.createElement(`input`);
+            this.slider.id = `leaflet-radar-slider`;
+            this.slider.type = `range`;
+            this.slider.min = 0;
+
+            slider_div.appendChild(this.slider);
+
+            this.timestamp_div = L.DomUtil.create(
+                `div`,
+                `leaflet-radar-timestamp`,
+                this.container
+            );
+
+            this.setDisabled(true);
+            this.isPaused = true;
+
+            return this.container;
+        },
+
+        hideLayerByIndex: function (index) {
+            this.timeLayers[index].tileLayer.setOpacity(0);
+            this.timestamp_div.innerHTML = ``;
+        },
+
+        showLayerByIndex: function (index) {
+            this.timeLayers[index].tileLayer.setOpacity(
+                this.options.opacity
+            );
+            this.timestamp_div.innerHTML = this.timeLayers[index].timestamp;
+        },
+
+        setDisabled: function (disabled) {
+            this.slider.disabled = disabled;
+            this.timestamp_div.innerText = ``;
+        },
+
+        toggle: function () {
+            if (!this.checkbox.checked) {
+                this.setDisabled(true);
+                this.removeLayers();
+                return;
+            }
+
+            this.setDisabled(false);
+
+            this.timeLayers = this.generateLayers();
+            this.addLayers(this.timeLayers);
+
+            this.slider.max = `${this.timeLayers.length - 1}`;
+
+            this.timeLayerIndex = 0;
+
+            this.isPaused = false;
+
+            this.slider.oninput = () => {
+
+                this.hideLayerByIndex(this.timeLayerIndex);
+                this.timeLayerIndex = +this.slider.value;
+                this.showLayerByIndex(this.timeLayerIndex);
+
+                this.isPaused = true;
+            };
+
+            this.setTransitionTimer();
+        },
+
+
+        setTransitionTimer: function () {
+            setTimeout(() => {
+                if (this.isPaused) {
+                    return;
+                }
+
+                this.timeLayers.forEach(timeLayer => {
+                    timeLayer.tileLayer.setOpacity(0);
+                    timeLayer.tileLayer.addTo(this.map);
+                });
+
+                if (this.checkbox.checked) {
+
+                    this.hideLayerByIndex(this.timeLayerIndex);
+                    this.incrementLayerIndex();
+                    this.showLayerByIndex(this.timeLayerIndex);
+
+                    this.slider.value = `${this.timeLayerIndex}`;
+
+                    this.setTransitionTimer();
+                } else {
+                    this.setDisabled(true);
+                    this.removeLayers();
+                }
+            }, this.options.transitionMs);
+        },
+
+        incrementLayerIndex: function () {
+            this.timeLayerIndex++;
+            if (this.timeLayerIndex > this.timeLayers.length - 1) {
+                this.timeLayerIndex = 0;
+            }
+        },
+
+        addLayers: function () {
+            this.timeLayers.forEach(timeLayer => {
+                timeLayer.tileLayer.setOpacity(0);
+                timeLayer.tileLayer.addTo(this.map);
+            });
+        },
+
+        removeLayers: function () {
+            this.timeLayers.forEach(timeLayer =>
+                timeLayer.tileLayer.removeFrom(this.map)
+            );
+            this.timeLayers = [];
+            this.timeLayerIndex = 0;
+        },
+
+        generateLayers: function () {
+            let timeLayers = [];
+
+            const TOTAL_INTERVALS = 10;
+            const INTERVAL_LENGTH_HRS = 5;
+
+            const currentTime = new Date();
+
+            for (let i = 0; i <= TOTAL_INTERVALS; i++) {
+
+                const timeDiffMins =
+                    TOTAL_INTERVALS * INTERVAL_LENGTH_HRS -
+                    INTERVAL_LENGTH_HRS * i;
+
+                const suffix = (function(time) {  
+                    switch(time) {
+                        case 0:
+                            return '';
+                        case 5:
+                            return '-m05m';
+                        default:
+                            return '-m' + time + 'm';
+                    }
+                    })(timeDiffMins);
+
+                const layerRequest = this.NEXRAD_LAYER + suffix;
+
+                const layer = L.tileLayer.wms(this.NEXRAD_URL, {
+                    layers: layerRequest,
+                    format: `image/png`,
+                    transparent: true,
+                    opacity: this.options.opacity,
+                    zIndex: this.options.zIndex
+                });
+
+                const timeString = new Date(
+                    currentTime.valueOf() - timeDiffMins * 60 * 1000
+                ).toLocaleTimeString();
+                timeLayers.push({
+                    timestamp: `${timeString} (-${timeDiffMins} min)`,
+                    tileLayer: layer
+                });
+            }
+            return timeLayers;
+        }
+        });
+
+        L.control.radar = function (options) {
+        return new L.Control.Radar(options);
+        };
+    </script>
+
+{% endblock content %}
+
+
+

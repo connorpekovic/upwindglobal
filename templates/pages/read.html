@@ -1,0 +1,26 @@
+{% extends '_base.html' %}
+{% load static %}
+
+{% block title %}Detail page{% endblock title %}
+
+{% block content %}
+
+<div class="container">
+
+    <div class="row viewing-tray">
+        <div class="col-md-2"></div>
+        <div class="col-md-4">
+            <h1 style="text-align: center;">
+                Local data display</h1>
+            {% include 'pages/info/detail.html' %}
+        </div>
+        <div class="col-md-4">
+            <h1 style="text-align: center;">Rest API Data Display</h1>
+            {% include 'pages/info/detailrest.html' %}
+        </div>
+        <div class="col-md-2"></div>
+
+    </div>
+</div>
+
+{% endblock content %}

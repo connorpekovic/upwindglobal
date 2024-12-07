@@ -1,0 +1,20 @@
+{% extends 'pages/home.html' %}
+{% load crispy_forms_tags %}
+{% load static %}
+
+{% block title %}Update page{% endblock title %}
+
+{% block content %}
+<div class="container viewing-tray">
+
+    <h3 style="text-align: center;">Update your decesion</h3>
+
+            <!-- How we render in a Crispy Form with the help of UpdateView in View.py-->
+            <form action='.' method='POST'>
+                {% csrf_token %}
+                {% crispy form %}
+            </form>
+
+</div>
+
+{% endblock content %}

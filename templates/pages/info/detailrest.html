@@ -1,0 +1,30 @@
+<!-- This page will serve as a good example of on how to consumed Rest API in a web page. -->
+
+<!-- This will give you access to call Django static file's with the tag {# static 'file/path.img' #}-->
+{% load static %}
+
+    <h3 style="text-align: center;">Temperatures Across the USA</h3>
+
+    <!-- The designer can print context dictionary objects directly defined in the views.py file  -->
+    {% comment %} 
+        {{chicagoWeather.description}} 
+    {% endcomment %}
+
+    <!-- The designer can loop though a set of context dictionary objects defined in the views.py -->
+    {% comment %} 
+    {% for dataPoints in chicagoWeather %}
+        {{dataPoints}}
+    {% endfor %}
+    {% endcomment %}
+
+    <!-- Chart.js uses this HTML tag for their charts -->
+    <canvas id="myChart2" width="100" height="100" class="pb-5" style=""></canvas>
+    
+    <script src="{% static '/js/base.js' %}"></script>
+    
+    <!-- This sends data too JavaScript. How do you pull data in from javascript -->
+    {{ Q1_A|json_script:"Q1_A" }}
+    {{ Q1_B|json_script:"Q1_B" }}
+    {{ Q1_C|json_script:"Q1_C" }}
+    {{ Q1_D|json_script:"Q1_D" }}
+    

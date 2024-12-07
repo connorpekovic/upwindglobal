@@ -1,0 +1,41 @@
+{% extends 'pages/home.html' %}
+{% load crispy_forms_tags %}
+{% load static %}
+
+{% block title %}About page{% endblock title %}
+
+{% block content %} 
+
+<div class="container viewing-tray"  >
+    <div class="row">
+      <div class="col-2-md"></div>
+      <div class="col-8-md px-4" style="width: 100%;">
+
+        <p> This project is here to serve as the perfect example as to how to make a
+            highly secure database driven web app. The source code is on <a href=" https://github.com/connorpekovic/djangox">GitHub</a>. 
+            This domain is for sale.</p>
+            
+        <p class="pt-1">This website uses state of the art web technology called the 
+            Python Django Web Application Framework that runs in a low-cost, highly secure Amazon Web Services Elastic Beanstalk deployment.</p>
+    
+        <p class="pt-1">This website implimentes all the fundamental functions of <a href="https://12factor.net/">12 Factor</a>
+            web development; containerization, consuming JSON data with REST API's, data visualization, and forms to interact with data.
+            The codebase is small, readable, and well commented to 
+            serve as a perfect example for future web projects for myself and anyone on the open internet. The code base will be forever available
+            <a href= "https://github.com/connorpekovic/djangox">here</a> on GitHub.</p>
+    
+        <p class="pt-1" >Future plans for this website include enriching the data provided in return for a location. This project will
+            be used as an example for future tutorials. 
+        </p>
+    
+    
+        <p > - Connor John Pekovic </p>
+        <p > Enjoy your technological journey </p>
+
+      </div>
+      <div class="col-2-md"></div>
+    </div>
+</div>
+
+
+{% endblock content %}
