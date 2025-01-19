@@ -64,7 +64,6 @@ const config = {
 const chart1 = new Chart( context, config );
 
 
-
 /* Rest API Consumption example  */
 
 //Chicago Illinois

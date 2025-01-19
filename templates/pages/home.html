@@ -8,7 +8,7 @@
 
     <div class="container">
 
-        
+
         <!-- Location location Input form. -->
         <div class="container"> 
             <div class="row">
@@ -22,7 +22,7 @@
                         <span class="input-group-text" id="basic-addon3">Location</span>
                     </div>
                     <!-- <input type="text" class="form-control" id="weatherLocationInputID" aria-describedby="basic-addon3"> -->
-                    <input type="text" class="form-control" id="search_input" placeholder="Type city name..." />
+                    <input type="text" class="form-control" id="search_input" placeholder="Type city name..."/>
 
                     <!-- The Javascript for this function is defined inline below. -->
                     <button type="button" class="btn btn-primary" onclick="getLocalWeather()">Search</button>
@@ -64,7 +64,7 @@
                 <div class="col-md-5" >
                     <div id="map"></div>
                 </div>
-                <div class="col-md-2"></div>
+               <div class="col-md-2"></div> -->
             </div>
         </div>
 
@@ -96,7 +96,6 @@
                         {% include 'pages/info/detailrest.html' %}
                     </div>
                 </div>
-                
             </div>
         </div>
     </div>
@@ -105,22 +104,29 @@
     <script>
 
     var searchInput = 'search_input';
+    var autocomplete;
 
-    // The autocomplete works as long as nothing was in the input feild before a webpage reload.
+    // The autocomplete works as long as nothing was in the input felid before a webpage reload.
     // If there's text in the input "place_changed", gMaps will freeze on reload.
+    // The initMap() function is thE "callback" of the link to the Google maps places API in the base.html.
+    //  This ensures the google variable is fully available, fully after the link has been retrieved.
+    async function initMap() {
+
+        autocomplete = new google.maps.places.Autocomplete((document.getElementById(searchInput)), {
+         types: ['geocode'],
+         /*componentRestrictions: {
+          country: "USA"
+         }*/
+        });
+  
+    }
      
     $(document).ready(function () {
-     var autocomplete;
-     autocomplete = new google.maps.places.Autocomplete((document.getElementById(searchInput)), {
-      types: ['geocode'],
-      /*componentRestrictions: {
-       country: "USA"
-      }*/
-     });
-      
-     google.maps.event.addListener(autocomplete, 'place_changed', function () {
-      var near_place = autocomplete.getPlace();
-     });
+
+        google.maps.event.addListener(autocomplete, 'place_changed', function () {
+            var near_place = autocomplete.getPlace();
+           });
+     
     });
 
         /* This function is called my the onload attribtue of the body html element.*/
@@ -150,7 +156,7 @@
         Purpose: Build the string for the URL call to the openweatherapi for weather data, then passed
                  the string to the getTempature function.
         Input: User input of a city name where we want weather data from.
-        Output: Passed the URL for the REST Api call to getTeampture() defined direclty below. 
+        Output: Passed the URL for the REST Api call to getTeampture() defined directly below. 
         */
         
         async function getLocalWeather() {
@@ -160,7 +166,6 @@
             /* Format the input */
             workLocation = input
             input = input.toLowerCase();
-            
 
             /* Build the URL Query */
             let hostnamePath = 'https://api.openweathermap.org/data/2.5/weather?q='
@@ -169,14 +174,13 @@
             let getLocalWeatherCall = hostnamePath.concat(input, appid);
 
             /* The HTML Value element assignments will happen in the getTempature function */ 
-            /* because I am having a hard time */
             getTempature(getLocalWeatherCall);
             
         }
 
         /*
         Function name: getTempature
-        Purpose: Call REST API, parse JSON Data, pupulate HTML with the output, and refresh screen size.
+        Purpose: Call REST API, parse JSON Data, populate HTML with the output, and refresh screen size.
         Input: RestAPI URL
         Output: Populating HTML with values and resizing the screen at the end for Leaflets.js.
         */
@@ -219,6 +223,7 @@
                 
                 lat = data.coord.lat
                 lon = data.coord.lon
+                console.log("Lat is: ", lat, " and lon is ", lon)
 
 
                 // 2. Weather Main 
@@ -247,37 +252,38 @@
 
                 callMap()
 
+                const work = async () => {
+                await sleep(1000)
+                   document.getElementById("leaflet-radar-toggle").checked = true;
+                }
+                work()
+                document.getElementById('leaflet-radar-toggle').click();
+
                 return F  
             }
         }
 
 
-
-
-
         
         /*  leaflet.js */
         async function callMap() {
-            // var map = L.map('map').setView([lat, lon], 10);
+            var map = L.map('map').setView([lat, lon], 10);
 
-            // L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            //     maxZoom: 19,
-            //     attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-            // }).addTo(map);
+            L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                maxZoom: 19,
+                attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+            }).addTo(map);
 
-            // /* 6. Resize screen so Leaflet.js knows what size the screen will be. */
-            // setTimeout(function () {
-            // window.dispatchEvent(new Event('resize'));
-            // }, 10);
-            // console.log('Resize called')
-
-
-            
+            /* 6. Resize screen so Leaflet.js knows what size the screen will be.  */
+            setTimeout(function () {
+            window.dispatchEvent(new Event('resize'));
+            }, 10);
+            console.log('Resize called')
 
             /*Radar*/
 
-            /*  If the map exist, nullify it because the next instruction initalizes a map
-                and we can only have 1 map active per web scession. 
+            /*  If the map exist, nullify it because the next instruction initializes a map
+                and we can only have 1 map active per web session. 
 
             Source: https://github.com/Leaflet/Leaflet/issues/3962#issuecomment-384510881
             */
@@ -288,6 +294,7 @@
 
             // Initalize the map to the lattitude and longitude recieved from the OpenWeatherApi
             map = L.map("map").setView([lat, lon], 7);
+
 
             // Build html values for attribution section on the bottom corner of the map.
             var osmAttribution =
@@ -317,14 +324,7 @@
             window.dispatchEvent(new Event('resize'));
             }, 10);
             console.log('Resize called')
-
-
-
-        }
-
-
-
-
+            }
 
 
         /* Leaflet radar */
@@ -547,13 +547,14 @@
                     tileLayer: layer
                 });
             }
-            return timeLayers;
+           return timeLayers;
         }
         });
 
         L.control.radar = function (options) {
         return new L.Control.Radar(options);
         };
+        
     </script>
 
 {% endblock content %}

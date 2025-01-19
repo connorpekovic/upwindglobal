@@ -89,18 +89,17 @@ TEMPLATES = [
 WSGI_APPLICATION = 'config.wsgi.application'
 
 
-# Database
-# https://docs.djangoproject.com/en/5.0/ref/settings/#databases
+# # Database
+# # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 import os
 DJANGO_DATABASE_PASSWORD = os.environ["DJANGO_DATABASE_PASSWORD"]
-# DJANGO_DATABASE_PASSWORD = os.environ["DJANGO_DATABASE_PASSWORD"]
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'ebdb',
         'USER': 'ebroot',
         'PASSWORD': DJANGO_DATABASE_PASSWORD,
-        'HOST': 'awseb-e-rrmgpdsme6-stack-awsebrdsdatabase-dnulqavazwij.cvlshtbjp1wn.us-east-1.rds.amazonaws.com',
+        'HOST': 'awseb-e-mnhpmjwcmj-stack-awsebrdsdatabase-wn40buwaqphc.cvlshtbjp1wn.us-east-1.rds.amazonaws.com',
         'PORT': '5432'
     }
 }

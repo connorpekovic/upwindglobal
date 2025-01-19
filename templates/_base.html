@@ -28,22 +28,23 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.css" integrity="sha256-aa0xaJgmK/X74WM224KMQeNQC2xYKwlAt08oZqjeF0E=" crossorigin="anonymous" />
 
 <!-- Leaflet CSS -->
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.2/dist/leaflet.css"
-integrity="sha256-sA+zWATbFveLLNqWO2gtiw3HL/lh1giY/Inf1BJ0z14="
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
 crossorigin=""/>
 
  <!-- Leaflet Javascript. Place after Leaflet's CSS -->
- <script src="https://unpkg.com/leaflet@1.9.2/dist/leaflet.js"
- integrity="sha256-o9N1jGDZrf5tS+Ft4gbIK7mYMipq9lqpVJ91xHSyKhg="
- crossorigin=""></script>
-
+ <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+     integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+     crossorigin=""></script>
+     
  <!-- Google jQuery -->
- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.2/jquery.min.js"></script>
+ <script src="http://ajax.googleapis.com/ajax/libs/jquery/3.6.2/jquery.min.js"></script>
 
  <!-- Google Maps Library -->
- <!-- &callback=initMap might be able to be removed. -->
- <script async
-    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB0uFb7hLDwMOtmohas8XJ_xw1eslWSZPw&libraries=places">
+ <!-- &callback=initMap might be able to be removed. That is how you execute a Javascript function upon when the call -->
+ <script 
+    async
+    src="http://maps.googleapis.com/maps/api/js?key=AIzaSyB0uFb7hLDwMOtmohas8XJ_xw1eslWSZPw&libraries=places&callback=initMap">
 </script>
 
 
@@ -137,21 +138,19 @@ crossorigin=""/>
 </main>
 <!-- End of navigation item --> 
 
-  <!-- Main website content -->
-    {% block content %}
-      <p>Default content...</p>
-    {% endblock content %}
- 
 
-  <footer class="footer">
-    <div class="container">
-      <span class="text-muted">Upwind Global Weather Monitor</span>
-    </div>
-  </footer>
+<!-- Main website content -->
+{% block content %}
+<p>Default content...</p>
+{% endblock content %}
 
 
+<footer class="footer">
+<div class="container">
+<span class="text-muted">Upwind Global Weather Monitor</span>
+</div>
+</footer>
 
-  
   
   <!-- Bootstrap JavaScript -->
   <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha256-4+XzXVhsDmqanXGHaHvgh1gMQKX40OUvDEBTu8JcmNs=" crossorigin="anonymous"></script>
@@ -167,6 +166,11 @@ crossorigin=""/>
   
     <!-- Project JS -->
     <script  type="module" src="{% static 'js/base.js' %}"></script>
+
+
+
+    
+
 
     {% block javascript %}{% endblock javascript %}
 

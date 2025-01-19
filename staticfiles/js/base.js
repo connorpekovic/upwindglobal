@@ -22,7 +22,7 @@ console.log('Beginning of javascript')
 /* 
 Chart.js for the RestAPI Consumer Chart 
 
-Below in this file is a more detail explanation of how to use Charts.js  */
+Below in this file is a more detailed explanation of how to use Charts.js  */
 
 //The context for chart 1
 const context = document.getElementById('chart1').getContext('2d');
