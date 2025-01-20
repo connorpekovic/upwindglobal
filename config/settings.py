@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
+    'whitenoise.runserver_nostatic',
     'django.contrib.staticfiles',
 
     # Third-party
@@ -92,17 +93,27 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # # Database
 # # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 import os
-DJANGO_DATABASE_PASSWORD = os.environ["DJANGO_DATABASE_PASSWORD"]
+DJANGO_DATABASE_PASSWORD = os.environ["DJANGO_DATABASE_PASSWORD"] # Prev AWS db
+HEROKU_DATABASE_PASSWORD = os.environ["HEROKU_DATABASE_PASSWORD"]
+HEROKU_DATABASE_USERNAME = 'uf9l88gh1epbj1'
+HEROKU_DATABASE_NAME = 'degdbudi8289ua'
+HEROKU_DATABASE_URL = 'ccpa7stkruda3o.cluster-czrs8kj4isg7.us-east-1.rds.amazonaws.com'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'ebdb',
-        'USER': 'ebroot',
-        'PASSWORD': DJANGO_DATABASE_PASSWORD,
-        'HOST': 'awseb-e-mnhpmjwcmj-stack-awsebrdsdatabase-wn40buwaqphc.cvlshtbjp1wn.us-east-1.rds.amazonaws.com',
-        'PORT': '5432'
+        'NAME': HEROKU_DATABASE_NAME,
+        'USER': HEROKU_DATABASE_USERNAME,
+        'PASSWORD': HEROKU_DATABASE_PASSWORD,
+        'HOST': 'ccpa7stkruda3o.cluster-czrs8kj4isg7.us-east-1.rds.amazonaws.com',
+        'PORT': '5432',
+        'OPTIONS': {'sslmode': 'require'} # Heroku drove this addition. 
     }
 }
+
+
+## AWS database hostname.
+# awseb-e-mnhpmjwcmj-stack-awsebrdsdatabase-wn40buwaqphc.cvlshtbjp1wn.us-east-1.rds.amazonaws.com
+# DJANGO_DATABASE_PASSWORD
 
 # DATABASES = {
 #     'default': {
@@ -150,6 +161,9 @@ STATIC_URL = "static/"
 STATICFILES_DIRS = [BASE_DIR / "static"]  # new
 STATIC_ROOT = BASE_DIR / "staticfiles"  # new
 STATICFILES_STORAGE = "django.contrib.staticfiles.storage.StaticFilesStorage"  # new
+
+## For Heroku deployment.
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
