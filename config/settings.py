@@ -12,10 +12,14 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 
 from pathlib import Path
 import os
+from environs import Env # Allows environment variables from docker-compose.yml to be accessed.
+env = Env()
+env.read_env()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+SECURE_SSL_REDIRECT = env.bool("DJANGO_SECURE_SSL_REDIRECT", default=False)
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
@@ -93,27 +97,19 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # # Database
 # # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 import os
-DJANGO_DATABASE_PASSWORD = os.environ["DJANGO_DATABASE_PASSWORD"] # Prev AWS db
-HEROKU_DATABASE_PASSWORD = os.environ["HEROKU_DATABASE_PASSWORD"]
-HEROKU_DATABASE_USERNAME = 'uf9l88gh1epbj1'
-HEROKU_DATABASE_NAME = 'degdbudi8289ua'
-HEROKU_DATABASE_URL = 'ccpa7stkruda3o.cluster-czrs8kj4isg7.us-east-1.rds.amazonaws.com'
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': HEROKU_DATABASE_NAME,
-        'USER': HEROKU_DATABASE_USERNAME,
-        'PASSWORD': HEROKU_DATABASE_PASSWORD,
-        'HOST': 'ccpa7stkruda3o.cluster-czrs8kj4isg7.us-east-1.rds.amazonaws.com',
+        'NAME': os.environ["HEROKU_DATABASE_NAME"],
+        'USER': os.environ["HEROKU_DATABASE_USERNAME"],
+        'PASSWORD': os.environ["HEROKU_DATABASE_PASSWORD"],
+        'HOST': os.environ["HEROKU_DATABASE_URL"],
         'PORT': '5432',
         'OPTIONS': {'sslmode': 'require'} # Heroku drove this addition. 
     }
 }
 
-
-## AWS database hostname.
-# awseb-e-mnhpmjwcmj-stack-awsebrdsdatabase-wn40buwaqphc.cvlshtbjp1wn.us-east-1.rds.amazonaws.com
-# DJANGO_DATABASE_PASSWORD
 
 # DATABASES = {
 #     'default': {
