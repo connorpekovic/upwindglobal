@@ -30,7 +30,7 @@ SECRET_KEY = os.environ["PYTHON_DJANGO_SECRET_KEY_JAMA_METRICS"]
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get("DJANGO_DEBUG_MODE", "false")
 
-ALLOWED_HOSTS = ["127.0.0.1", "upwindglobal.com"]
+ALLOWED_HOSTS = ["127.0.0.1", "upwindglobal.com", "www.upwindglobal.com"]
 
 
 # Application definition
