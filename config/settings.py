@@ -12,7 +12,7 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 
 from pathlib import Path
 import os
-from environs import Env # Allows environment variables from docker-compose.yml to be accessed.
+from environs import Env
 env = Env()
 env.read_env()
 
@@ -28,7 +28,7 @@ SECURE_SSL_REDIRECT = env.bool("DJANGO_SECURE_SSL_REDIRECT", default=False)
 SECRET_KEY = os.environ["PYTHON_DJANGO_SECRET_KEY_JAMA_METRICS"]
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ["12a4.us-east-1.elasticbeanstalk.com", "127.0.0.1", "upwindglobal.com",  "*"]
 
