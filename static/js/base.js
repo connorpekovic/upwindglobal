@@ -18,13 +18,14 @@ console.log('Beginning of javascript')
    const Q1_B = JSON.parse(document.getElementById('Q1_B').textContent);
    const Q1_C = JSON.parse(document.getElementById('Q1_C').textContent);
    const Q1_D = JSON.parse(document.getElementById('Q1_D').textContent);
+   const OPENWEATHER_API_KEY = JSON.parse(document.getElementById('OPENWEATHER_API_KEY').textContent);
 
 /* 
 Chart.js for the RestAPI Consumer Chart 
 
 Below in this file is a more detail explanation of how to use Charts.js  */
 
-//The context for chart 1
+//The context for chart 1, the Pie chart. chart 2 is the bar chart. 
 const context = document.getElementById('chart1').getContext('2d');
 
 // This setUp block will be assigned to the 'data' key of the 'config' block below.
@@ -66,29 +67,31 @@ const chart1 = new Chart( context, config );
 
 /* Rest API Consumption example  */
 
+
+
 //Chicago Illinois
-let url_chicago = 'https://api.openweathermap.org/data/2.5/weather?q=chicago&appid=a8efcfe69258b521961181dac55090ca'
+let url_chicago = `https://api.openweathermap.org/data/2.5/weather?q=chicago&appid=${OPENWEATHER_API_KEY}`
 let tempChi = await getTempature(url_chicago)
 console.log('Chicago is', tempChi)
 
 
 // Rest API call #2,   Dekalb, Illinois
-let url_Dekalb = 'https://api.openweathermap.org/data/2.5/weather?q=Dekalb&appid=a8efcfe69258b521961181dac55090ca'
+let url_Dekalb = `https://api.openweathermap.org/data/2.5/weather?q=Dekalb&appid=${OPENWEATHER_API_KEY}`
 let tempDekalb = await getTempature(url_Dekalb)
 console.log('Dekalb is', tempDekalb)
 
 // Rest API call #2,   Manchester, TN
-let url_Manchester = 'https://api.openweathermap.org/data/2.5/weather?q=nashville&appid=a8efcfe69258b521961181dac55090ca'
+let url_Manchester = `https://api.openweathermap.org/data/2.5/weather?q=nashville&appid=${OPENWEATHER_API_KEY}`
 let tempManchester = await getTempature(url_Manchester)
 console.log('Manchester is', tempManchester)
 
 // Rest API call #3,   Bloomington IL
-let url_Bloomington = 'https://api.openweathermap.org/data/2.5/weather?q=bloomington&appid=a8efcfe69258b521961181dac55090ca'
+let url_Bloomington = `https://api.openweathermap.org/data/2.5/weather?q=bloomington&appid=${OPENWEATHER_API_KEY}`
 let tempBloomington = await getTempature(url_Bloomington)
 console.log('Bloomington is', tempBloomington)
 
 // Rest API call #3,   Okeechobee, FL
-let url_Okeechobee = 'https://api.openweathermap.org/data/2.5/weather?q=okeechobee&appid=a8efcfe69258b521961181dac55090ca'
+let url_Okeechobee = `https://api.openweathermap.org/data/2.5/weather?q=okeechobee&appid=${OPENWEATHER_API_KEY}`
 let tempOkeechobee = await getTempature(url_Okeechobee)
 console.log('Okeechobee is', tempOkeechobee)
 
@@ -163,7 +166,8 @@ Chart objects are created with the Chart constructor. Ex: 'new Chart(context, co
 
 const context2 = document.getElementById('myChart2').getContext('2d');
 
-console.log("Chicago is ", tempChi, ".  Dekalb temp is ", tempDekalb)
+// debug
+// console.log("Chicago is ", tempChi, ".  Dekalb temp is ", tempDekalb)
 
 const labels2 = ['Chicago, IL', 'Dekalb, IL',  'Manchester, TN', 'Bloomington, IL', 'Okeechobee, FL'];
 // const labels = Utils.months({count: 7});
@@ -227,8 +231,6 @@ const config2 = {
     }
   },
 };
-
-
   
 //Nice, simple constructor of a new Chart.js chart for our RestAPI consuming Chart.
 const chart2 = new Chart( context2, config2 );
@@ -241,10 +243,6 @@ console.log('end of javascript')
     Stragety source: https://www.peachpit.com/articles/article.aspx?p=1394321&seqNum=2
 */
 
-console.log("Xbop");
-
-
 function onLoadFunct() {
-    console.log("Page load");
     document.getElementById("weatherLocationInputID").value = "CHICAGO"; 
   }

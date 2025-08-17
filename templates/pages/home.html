@@ -64,7 +64,7 @@
                 <div class="col-md-5" >
                     <div id="map"></div>
                 </div>
-               <div class="col-md-2"></div> -->
+               <div class="col-md-2"></div> 
             </div>
         </div>
 
@@ -72,8 +72,22 @@
 
         <!--  Vote on a season, Rest display. Early code.-->
         <div class="row" style="background-color: #E9ECEF;  border-radius: 5px;">
+            <!-- Pie chart -->
+            <div class="col-md-6 col-lg-4 order-1 order-md-1">
+                <div style="padding-right: 2rem; padding-left: 2rem; background-color: #E9ECEF;  border-radius: 5px;">
+                    {% include 'pages/info/detail.html' %}
+                </div>
+            </div>
+            
+            <!-- Temperature bar chart -->
+            <div class="col-md-6 col-lg-4 order-2 order-md-2">
+                <div style="padding-right: 2rem; padding-left: 2rem; position: relative; background-color: #E9ECEF;  border-radius: 5px;">
+                    {% include 'pages/info/detailrest.html' %}
+                </div>
+            </div>
+
             <!-- Call to action Jumbotron -->
-            <div class="col-md-4">
+            <div class="col-md-12 col-lg-4 order-3 order-md-3">
                 <div class="jumbotron">
                     <h1 class="display-5">What is your favorite season?</h1>
                     <p class="lead">Tell us what is your favorite season.</p>
@@ -84,27 +98,20 @@
                     </p>
                 </div>
             </div>
-            <!-- Pie chart -->
-            <div class="col-md-4">
-                <div style="padding-right: 2rem; padding-left: 2rem; background-color: #E9ECEF;  border-radius: 5px;">
-                    {% include 'pages/info/detail.html' %}
-                </div>
-            </div>
-            
-            <div class="col-md-4">
-                    <div style="padding-right: 2rem; padding-left: 2rem; position: relative; background-color: #E9ECEF;  border-radius: 5px;">
-                        {% include 'pages/info/detailrest.html' %}
-                    </div>
-                </div>
-            </div>
         </div>
     </div>
 
+    <!-- Pass API key to JavaScript -->
+    {{ OPENWEATHER_API_KEY|json_script:"OPENWEATHER_API_KEY" }}
+    
     <!-- Javascript Coding Section -->
     <script>
 
     var searchInput = 'search_input';
     var autocomplete;
+    
+    // Get API key from Django template
+    const OPENWEATHER_API_KEY = JSON.parse(document.getElementById('OPENWEATHER_API_KEY').textContent);
 
     // The autocomplete works as long as nothing was in the input felid before a webpage reload.
     // If there's text in the input "place_changed", gMaps will freeze on reload.
@@ -169,7 +176,7 @@
 
             /* Build the URL Query */
             let hostnamePath = 'https://api.openweathermap.org/data/2.5/weather?q='
-            let appid = '&appid=a8efcfe69258b521961181dac55090ca'
+            let appid = '&appid=' + OPENWEATHER_API_KEY
 
             let getLocalWeatherCall = hostnamePath.concat(input, appid);
 

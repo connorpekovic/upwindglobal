@@ -18,13 +18,14 @@
     {% endcomment %}
 
     <!-- Chart.js uses this HTML tag for their charts -->
-    <canvas id="myChart2" width="100" height="100" class="pb-5" style=""></canvas>
+    <canvas id="myChart2" width="100" height="100" class="pb-5"></canvas>
     
     <script src="{% static '/js/base.js' %}"></script>
     
-    <!-- This sends data too JavaScript. How do you pull data in from javascript -->
+    <!-- This sends data too JavaScript. Q: How do you pull data in from javascript? A: ID tags. -->
     {{ Q1_A|json_script:"Q1_A" }}
     {{ Q1_B|json_script:"Q1_B" }}
     {{ Q1_C|json_script:"Q1_C" }}
     {{ Q1_D|json_script:"Q1_D" }}
+    {{ OPENWEATHER_API_KEY|json_script:"OPENWEATHER_API_KEY" }}
     
